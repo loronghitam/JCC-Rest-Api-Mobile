@@ -83,7 +83,7 @@ class ProductController extends Controller
             return apiResponse(
                 200,
                 'success',
-                'Data berhasil Dirubah',
+                'Data berhasil di tambah',
                 $data
             );
         } catch (Exception $e) {

@@ -3,6 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Chat;
+use Exception;
+use App\RoomChat;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 
 class ChatController extends Controller
@@ -14,7 +17,12 @@ class ChatController extends Controller
      */
     public function index()
     {
-        //
+        return apiResponse(
+            200,
+            'success',
+            'Daftar Pesan',
+            Chat::where('receiver_id', auth()->user()->id)->get()
+        );
     }
 
     /**
@@ -35,7 +43,28 @@ class ChatController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        // dd($request->all());
+        // dd($room_id);
+        try {
+            $roomId = Str::uuid();
+            $data = Chat::create([
+                'sender_id' => auth()->user()->id,
+                'receiver_id' => $request->receiver_id,
+                'message' => $request->message,
+                'room_id' => $roomId,
+            ])->roomChat()->create([
+                'room_id' => $roomId
+            ]);
+
+            return apiResponse(
+                200,
+                'Success',
+                'Kirim Pesan',
+                $data
+            );
+        } catch (Exception $e) {
+            dd($e);
+        }
     }
 
     /**
@@ -69,7 +98,26 @@ class ChatController extends Controller
      */
     public function update(Request $request, Chat $chat)
     {
-        //
+        try {
+            // dd($chat->room_id);
+            $data = Chat::create([
+                'sender_id' => auth()->user()->id,
+                'receiver_id' => $chat->sender_id,
+                'message' => $request->message,
+                'room_id' => $chat->room_id,
+            ])->roomChat()->create([
+                'room_id' => $chat->room_id
+            ]);
+
+            return apiResponse(
+                200,
+                'Success',
+                'Balas Pesan Berhasil',
+                $data
+            );
+        } catch (Exception $e) {
+            dd($e);
+        }
     }
 
     /**
@@ -80,6 +128,6 @@ class ChatController extends Controller
      */
     public function destroy(Chat $chat)
     {
-        //
+        dd('belum di pikin soalnya gampang');
     }
 }

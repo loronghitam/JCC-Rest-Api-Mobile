@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Cart;
+use Exception;
 use Illuminate\Http\Request;
 
 class CartController extends Controller
@@ -14,7 +15,12 @@ class CartController extends Controller
      */
     public function index()
     {
-        //
+        return apiResponse(
+            200,
+            'Success',
+            'Daftar Cart',
+            Cart::where('user_id', auth()->user()->id,)->where('condition', 0)->with('product_id.category_id')->get()
+        );
     }
 
     /**
@@ -35,7 +41,20 @@ class CartController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        try {
+            $data = Cart::create([
+                'product_id' => $request->product_id,
+                'user_id' => auth()->user()->id,
+            ]);
+            return apiResponse(
+                200,
+                'success',
+                'Data Berhasil Ditambah',
+                $data
+            );
+        } catch (Exception $e) {
+            dd($e);
+        }
     }
 
     /**
@@ -80,6 +99,6 @@ class CartController extends Controller
      */
     public function destroy(Cart $cart)
     {
-        //
+        dd('ini buat delete tapi belum di bikin');
     }
 }

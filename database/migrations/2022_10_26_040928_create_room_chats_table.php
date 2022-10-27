@@ -14,7 +14,7 @@ class CreateRoomChatsTable extends Migration
     public function up()
     {
         Schema::create('room_chats', function (Blueprint $table) {
-            $table->id();
+            $table->uuid('room_id');
             $table->foreignId('chat_id')->constrained();
             $table->timestamps();
         });

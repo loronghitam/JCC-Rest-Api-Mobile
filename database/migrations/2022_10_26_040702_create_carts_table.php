@@ -17,6 +17,7 @@ class CreateCartsTable extends Migration
             $table->id();
             $table->foreignId('product_id')->constrained();
             $table->foreignId('user_id')->constrained();
+            $table->boolean('condition')->default(false);
             $table->timestamps();
         });
     }
