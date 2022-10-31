@@ -7,10 +7,14 @@ use Laravel\Passport\HasApiTokens;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Spatie\Permission\Traits\HasRoles;
+use Spatie\Permission\Models\Role;
+use Spatie\Permission\PermissionRegistrar;
+
 
 class User extends Authenticatable
 {
-    use HasApiTokens, Notifiable;
+    use HasApiTokens, Notifiable, HasRoles;
 
     /**
      * The attributes that are mass assignable.
@@ -41,9 +45,6 @@ class User extends Authenticatable
 
     public function userDetail()
     {
-        // return $this->hasManyThrough(UserDetail::class,Address::class
-        // ,'user_id','user_id'
-        // ,'id','id');
         return $this->hasOne(UserDetail::class, 'user_id', 'id');
     }
 }

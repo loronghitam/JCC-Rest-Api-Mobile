@@ -12,7 +12,7 @@ class UserDetail extends Model
      * @var array
      */
     protected $fillable = [
-        'tanggal_lahir', 'tempat_lahir', 'biografi', 'status', 'no_phone', 'aliran', 'gambar'
+        'tanggal_lahir', 'tempat_lahir', 'biografi', 'status', 'no_phone', 'aliran', 'gambar', 'user_id'
     ];
 
     /**
@@ -23,6 +23,11 @@ class UserDetail extends Model
     protected $hidden = [
         'user_id'
     ];
+
+    public function user()
+    {
+        return $this->hasOne(User::class, 'id', 'user_id');
+    }
 
     public function address()
     {

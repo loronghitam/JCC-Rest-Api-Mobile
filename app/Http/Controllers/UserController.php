@@ -7,6 +7,8 @@ use Exception;
 use App\UserDetail;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 
@@ -17,16 +19,27 @@ class UserController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index($id)
     {
+        $user =
+            User::where('id', $id)
+            ->first()->userDetail()->first();
+        UserDetail::where('user_id', $id)->first()
+            ->address()->first();
+        $image = asset('assets/images/user/' . $user->gambar);
+        $data = [
+            $user,
+            $image,
+        ];
         return apiResponse(
             200,
             'success',
             'Data User',
-            [User::where('id', 2)->first()
-                ->userDetail()->first()],
-            [UserDetail::where('user_id', 2)->first()
-                ->address()->first()],
+            [User::where('id', $id)
+                ->first()->userDetail()->first()],
+            [UserDetail::where('user_id', $id)->first()
+                ->address()->first()]
+
         );
     }
 
@@ -59,7 +72,38 @@ class UserController extends Controller
      */
     public function show($id)
     {
-        //
+        $user = DB::table('users')->where('users.id', $id)
+            ->join('user_details', 'users.id', '=', 'user_details.user_id')
+            ->join('addresses', 'users.id', '=', 'addresses.user_id')
+            ->select(
+                'name',
+                'email',
+                'tanggal_lahir',
+                'role',
+                'tempat_lahir',
+                'biografi',
+                'no_phone',
+                'aliran',
+                'gambar',
+                'alamat',
+                'provinsi',
+                'kota',
+                'desa',
+            )
+            ->first();
+        $image = asset('assets/images/user/' . $user->gambar);
+        $data = [
+            $user,
+            $image,
+        ];
+        return apiResponse(
+            200,
+            'success',
+            'Data User',
+            $data
+
+
+        );
     }
 
     /**

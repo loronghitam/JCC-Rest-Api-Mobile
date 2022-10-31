@@ -14,6 +14,8 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Auth\Events\Validated;
 use App\Http\Requests\RegistryRequest;
 use Illuminate\Support\Facades\Validator;
+use Spatie\Permission\Models\Role;
+use Spatie\Permission\Models\Permission;
 
 
 
@@ -45,16 +47,18 @@ class AuthController extends Controller
             if ($validator->fails()) {
                 return apiResponse(400, 'error', 'Data tidak lengkap ', $validator->errors());
             }
-            $data = DB::transaction(function () use ($request) {
+
+            DB::transaction(function () use ($request) {
                 User::create([
                     'name' => $request->name,
                     'email' => $request->email,
                     'password' => Hash::make($request->password),
                     'role' => $request->role,
-                ])->userDetail()->create()->address()->create();
+                ])->assignRole($request->role)->userDetail()->create()->address()->create();
             });
-
+            $data = User::latest()->select('name', 'email', 'role')->first();
             return apiResponse(200, 'success', 'Berhasil Registrasi', $data);
+            // ddd($data);
         } catch (Exception $e) {
             dd($e);
         }
@@ -94,8 +98,7 @@ class AuthController extends Controller
             $token = Auth::user()->createToken('API Token')->accessToken;
             $data   = [
                 'token'     => $token,
-                'role'     => auth()->user()->role,
-                'user'      => Auth::user()->detail,
+                'user'      => Auth::user()->where('id', auth()->user()->id)->select('name', 'email', 'role')->first(),
             ];
 
             return apiResponse(200, 'success', 'berhasil login', $data);
@@ -118,8 +121,7 @@ class AuthController extends Controller
             RefreshToken::whereIn('access_token_id', $tokens)->update([
                 'revoked' => true
             ]);
+            return apiResponse(200, 'succes', 'berhasil logout');
         }
-
-        return apiResponse(200, 'succes', 'berhasil logout');
     }
 }

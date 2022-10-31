@@ -3,21 +3,9 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
-// use App\Http\Controllers\UserController;
-// use App\Http\Controllers\AddressController;
-// use App\Http\Controllers\ProductController;
-// use App\Http\Controllers\CategoryController;
+use GuzzleHttp\Middleware;
+use Illuminate\Routing\RouteGroup;
 
-/*
-|--------------------------------------------------------------------------
-| API Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register API routes for your application. These
-| routes are loaded by the RouteServiceProvider within a group which
-| is assigned the "api" middleware group. Enjoy building your API!
-|
-*/
 
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
@@ -26,39 +14,43 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 /* -------------------------------------------------------------------------- */
 /*                                PUBLIC ROUTE                                */
 /* -------------------------------------------------------------------------- */
-Route::post('/register', [AuthController::class, 'register']);
-Route::post('/login', [AuthController::class, 'login']);
-Route::resource('product', ProductController::class)->only(['index', 'show']);
-
+Route::group(['middleware' => 'guest'], function () {
+    Route::post('/register', [AuthController::class, 'register']);
+    Route::post('/login', [AuthController::class, 'login']);
+    Route::resource('product', ProductController::class)->only(['index', 'show']);
+});
 
 /* -------------------------------------------------------------------------- */
 
 /* -------------------------------------------------------------------------- */
 /*                               PROTECTED ROUTE                              */
 /* -------------------------------------------------------------------------- */
-Route::group(['middleware' => ['auth:api']], function () {
-    Route::post('/logout', [AuthController::class, 'logout']);
-    /* -------------------------------------------------------------------------- */
-    /*                                 ISCOLECTOR                                 */
-    /* -------------------------------------------------------------------------- */
-    Route::resource('product', ProductController::class)->only(['store']);
+Route::group(
+    ['middleware' => 'auth:api',],
+    function () {
+        Route::post('/logout', [AuthController::class, 'logout']);
+        /* -------------------------------------------------------------------------- */
+        /*                                 ISCOLECTOR                                 */
+        /* -------------------------------------------------------------------------- */
+
+        Route::group(['middleware' => ['role:collector']], function () {
+            Route::resource('product', ProductController::class)->except(['create']);
+        });
+
+        /* ----------------------------- END ISCOLECTOR ----------------------------- */
+
+        /* -------------------------------------------------------------------------- */
+        /*                                  ISSENIMAN                                 */
+        /* -------------------------------------------------------------------------- */
 
 
-
-
-    /* ----------------------------- END ISCOLECTOR ----------------------------- */
-
-    /* -------------------------------------------------------------------------- */
-    /*                                  ISSENIMAN                                 */
-    /* -------------------------------------------------------------------------- */
-
-
-    /* ------------------------------ END ISSENIMAN ----------------------------- */
-    Route::resource('user', UserController::class);
-    Route::resource('address', AddressController::class);
-    Route::resource('category', CategoryController::class);
-    Route::resource('cart', CartController::class);
-    Route::resource('chat', ChatController::class);
-    Route::resource('transcation', TransacationController::class);
-});
+        /* ------------------------------ END ISSENIMAN ----------------------------- */
+        Route::resource('user', UserController::class);
+        Route::resource('address', AddressController::class);
+        Route::resource('category', CategoryController::class);
+        Route::resource('cart', CartController::class);
+        Route::resource('chat', ChatController::class);
+        Route::resource('transcation', TransacationController::class);
+    }
+);
 /* -------------------------------------------------------------------------- */

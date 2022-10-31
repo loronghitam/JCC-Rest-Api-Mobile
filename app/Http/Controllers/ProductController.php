@@ -18,6 +18,7 @@ class ProductController extends Controller
      */
     public function index()
     {
+        // dd(auth()->user()->role);
         return apiResponse(
             200,
             'success',
