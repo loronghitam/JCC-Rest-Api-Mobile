@@ -28,6 +28,9 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 /* -------------------------------------------------------------------------- */
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
+Route::resource('product', ProductController::class)->only(['index', 'show']);
+
+
 /* -------------------------------------------------------------------------- */
 
 /* -------------------------------------------------------------------------- */
@@ -35,11 +38,27 @@ Route::post('/login', [AuthController::class, 'login']);
 /* -------------------------------------------------------------------------- */
 Route::group(['middleware' => ['auth:api']], function () {
     Route::post('/logout', [AuthController::class, 'logout']);
+    /* -------------------------------------------------------------------------- */
+    /*                                 ISCOLECTOR                                 */
+    /* -------------------------------------------------------------------------- */
+    Route::resource('product', ProductController::class)->only(['store']);
+
+
+
+
+    /* ----------------------------- END ISCOLECTOR ----------------------------- */
+
+    /* -------------------------------------------------------------------------- */
+    /*                                  ISSENIMAN                                 */
+    /* -------------------------------------------------------------------------- */
+
+
+    /* ------------------------------ END ISSENIMAN ----------------------------- */
     Route::resource('user', UserController::class);
     Route::resource('address', AddressController::class);
     Route::resource('category', CategoryController::class);
-    Route::resource('product', ProductController::class);
     Route::resource('cart', CartController::class);
     Route::resource('chat', ChatController::class);
+    Route::resource('transcation', TransacationController::class);
 });
 /* -------------------------------------------------------------------------- */

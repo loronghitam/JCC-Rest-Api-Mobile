@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Exception;
 use App\Product;
+use App\ProductDetail;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
@@ -76,10 +78,28 @@ class ProductController extends Controller
             if ($validator->fails()) {
                 return apiResponse(400, 'error', 'Data tidak lengkap ', $validator->errors());
             }
+            // dd('asik');
+
             $data = Product::create(
                 $request->all()
-            )->productDetails()->create($request->all());
+            )->productDetails()->create($request->only(
+                [
+                    'nama, tahun_pembuatan, status, category_id,
+            aliran, deskripsi, tahun_pembuatan'
+                ]
+            ));
 
+            if (!$request->hasFile('gambar')) {
+                return apiResponse(500, 'Erorr', 'Data Bukan Image');
+            };
+            $extension = $request->file('gambar')->getClientOriginalExtension();
+            $uniq = Str::orderedUuid();
+            $name = $uniq . '.' . $extension;
+            $path = base_path('public/assets/images/user/');
+            $request->file('gambar')->move($path, $name);
+            ProductDetail::where('product_id', $this->id)->insert([
+                'gambar' => $name,
+            ]);
             return apiResponse(
                 200,
                 'success',
@@ -102,7 +122,7 @@ class ProductController extends Controller
         return apiResponse(
             200,
             'success',
-            'List Products / List Prodicts with category',
+            'Product : ' . $product->name,
             Product::with('category_id')->with('productDetails')
         );
     }

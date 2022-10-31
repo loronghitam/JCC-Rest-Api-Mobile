@@ -28,10 +28,12 @@ class AuthController extends Controller
                 'name'      => 'required',
                 'email'     => 'required|email:filter|unique:users',
                 'password'  => 'required|min:8',
+                'role'  => 'required',
             ];
 
             $message = [
                 'email.required'    => 'Mohon isikan email anda',
+                'role.required'    => 'Mohon isikan role anda',
                 'email.email'       => 'Mohon isikan email valid',
                 'email.unique'      => 'Email sudah terdaftar',
                 'password.required' => 'Mohon isikan password anda',
@@ -47,7 +49,8 @@ class AuthController extends Controller
                 User::create([
                     'name' => $request->name,
                     'email' => $request->email,
-                    'password' => Hash::make($request->password)
+                    'password' => Hash::make($request->password),
+                    'role' => $request->role,
                 ])->userDetail()->create()->address()->create();
             });
 
@@ -91,6 +94,7 @@ class AuthController extends Controller
             $token = Auth::user()->createToken('API Token')->accessToken;
             $data   = [
                 'token'     => $token,
+                'role'     => auth()->user()->role,
                 'user'      => Auth::user()->detail,
             ];
 
