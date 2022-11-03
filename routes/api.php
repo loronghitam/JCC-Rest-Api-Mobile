@@ -33,7 +33,7 @@ Route::group(
         /*                                 ISCOLECTOR                                 */
         /* -------------------------------------------------------------------------- */
 
-        Route::group(['middleware' => ['role:collector']], function () {
+        Route::group(['middleware' => ['role:seniman']], function () {
             Route::resource('product', ProductController::class)->except(['create']);
         });
 

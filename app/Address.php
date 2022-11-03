@@ -23,4 +23,9 @@ class Address extends Model
     protected $hidden = [
         'user_id'
     ];
+
+    public function getRouteKeyName()
+    {
+        return 'no_alamat';
+    }
 }

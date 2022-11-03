@@ -19,6 +19,7 @@ class CreateProductDetailsTable extends Migration
             $table->string('dimensi');
             $table->string('media');
             $table->string('gambar');
+            $table->float('harga', 20, 00);
             $table->string('status');
             $table->string('status_barang');
             $table->string('kondisi');

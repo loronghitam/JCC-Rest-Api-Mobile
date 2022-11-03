@@ -13,7 +13,7 @@ class ProductDetail extends Model
      */
     protected $fillable = [
         'deskripsi', 'dimensi', 'media',
-        'gambar', 'status', 'status_barang', 'kondisi'
+        'gambar', 'status', 'status_barang', 'kondisi', 'harga'
     ];
 
     /**

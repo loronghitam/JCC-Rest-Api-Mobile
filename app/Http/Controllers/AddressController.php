@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\User;
 use Exception;
 use App\Address;
 use App\UserDetail;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 
 class AddressController extends Controller
@@ -17,12 +19,16 @@ class AddressController extends Controller
      */
     public function index()
     {
+        // dd('asik');
+        DB::enableQueryLog();
         return apiResponse(
             200,
             'success',
             'Data User',
-            UserDetail::where('user_id', 2)->first()
-                ->address()->first(),
+            DB::table('users')
+                ->join('addresses', 'users.id', '=', 'addresses.user_id')
+                ->select('name', 'email', 'role', 'no_alamat as urutan alamat', 'alamat', 'provinsi', 'kota', 'desa', 'desa')
+                ->get()
         );
     }
 
@@ -73,11 +79,17 @@ class AddressController extends Controller
                 'alamat'          => $request->alamat,
                 'provinsi'            => $request->provinsi,
                 'kota'          => $request->kota,
+                'user_id' => auth()->user()->id,
                 'desa'            => $request->desa,
-                'user_id'            => $request->user_id,
             ]);
 
-            return apiResponse(200, 'success', 'Data berhasil Dirubah', Address::where('no_alamat', $request->no_alamat)->first());
+            return apiResponse(
+                200,
+                'success',
+                'Data berhasil Dirubah',
+                // Address::latest()
+                $user
+            );
         } catch (Exception $e) {
             dd($e);
         }
@@ -114,11 +126,11 @@ class AddressController extends Controller
      */
     public function update(Request $request, Address $address)
     {
-        // dd($address);
+        // dd($address->no_alamat);
         try {
-            // dd($request);
+            $id = auth()->user()->id;
+            // dd($id);
             $rules = [
-                'no_alamat' => 'required',
                 'alamat'    => 'required',
                 'provinsi'  => 'required',
                 'kota'      => 'required',
@@ -127,7 +139,6 @@ class AddressController extends Controller
 
             $message = [
                 // 'tanggal_lahir.required'    => 'Mohon isikan tanggal_lahir anda',
-                'no_alamat.required'    => 'Mohon isikan no_alamat anda',
                 'alamat.required'    => 'Mohon isikan alamat anda',
                 'provinsi.required'    => 'Mohon isikan provinsi anda',
                 'kota.required'    => 'Mohon isikan kota anda',
@@ -136,11 +147,10 @@ class AddressController extends Controller
 
             $validator = Validator::make($request->all(), $rules, $message);
 
-            if ($validator->fails()) {
-                return apiResponse(400, 'error', 'Data tidak lengkap ', $validator->errors());
-            }
-
-            $user = Address::where('user_id', 2)->update([
+            // if ($validator->fails()) {
+            //     return apiResponse(400, 'error', 'Data tidak lengkap ', $validator->errors());
+            // }
+            $user = Address::where(['user_id',  $id], ['no_alamat', '=', $address])->update([
                 'no_alamat'      => $request->no_alamat,
                 'alamat'          => $request->alamat,
                 'provinsi'            => $request->provinsi,

@@ -18,9 +18,11 @@ class CreateAddressesTable extends Migration
             $table->integer('no_alamat')->nullable();
             $table->text('alamat')->nullable();
             $table->string('provinsi')->nullable();
+            $table->string('kecamatan')->nullable();
             $table->string('kota')->nullable();
             $table->string('desa')->nullable();
             $table->foreignId('user_id')->constrained();
+            $table->boolean('prioritas')->nullable();
             $table->timestamps();
         });
     }

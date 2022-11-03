@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Exception;
 use App\Category;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
@@ -63,8 +64,26 @@ class CategoryController extends Controller
                     $validator->errors()
                 );
             }
+            if (!$request->hasFile('gambar')) {
+                return apiResponse(500, 'Erorr', 'Data Bukan Image');
+            };
+            $extension = $request->file('gambar')->getClientOriginalExtension();
+            $uniq = Str::orderedUuid();
+            $name = $uniq . '.' . $extension;
+            $path = base_path('public/assets/images/category/');
+            $request->file('gambar')->move($path, $name);
 
-            $data = Category::create($request->all());
+            $category = Category::create([
+                'name' => $request->name,
+                'gambar' => $name,
+            ]);
+
+            $gambar = asset('assets/images/category/' . $category->gambar);
+            $data = [
+                $category,
+                $gambar,
+            ];
+
 
             return apiResponse(
                 200,
@@ -135,14 +154,28 @@ class CategoryController extends Controller
                     $validator->errors()
                 );
             }
+            $extension = $request->file('gambar')->getClientOriginalExtension();
+            $uniq = Str::orderedUuid();
+            $name = $uniq . '.' . $extension;
+            $path = base_path('public/assets/images/category/');
+            $request->file('gambar')->move($path, $name);
 
-            $data = Category::where('id', $id)->update($request->only('name', 'gambar'));
+            $category = Category::where('id', $id)->update([
+                'name' => $request->name,
+                'gambar' => $name,
+            ]);
+
+            $gambar = asset('assets/images/category/' . $name);
+            $data = [
+                Category::where('id', $id)->first(),
+                $gambar,
+            ];
 
             return apiResponse(
                 200,
                 'success',
                 'Data berhasil Dirubah',
-                Category::find($id)->all()
+                $data
             );
         } catch (Exception $e) {
             dd($e);

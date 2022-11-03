@@ -176,7 +176,7 @@ class UserController extends Controller
             ]);
 
 
-            return apiResponse(200, 'success', 'Data berhasil Dirubah', UserDetail::where('id', 2)->first());
+            return apiResponse(200, 'success', 'Data berhasil Dirubah', UserDetail::where('id', $id)->first());
         } catch (Exception $e) {
             dd($e);
         }
