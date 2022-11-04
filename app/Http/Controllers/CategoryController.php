@@ -21,7 +21,7 @@ class CategoryController extends Controller
             200,
             "success",
             "List Categories",
-            Category::all()
+            Category::all(['name as nama', 'gambar'])
         );
     }
 
@@ -104,11 +104,18 @@ class CategoryController extends Controller
      */
     public function show($id)
     {
+        $category = Category::find($id)->first(['name as nama', 'gambar']);
+        $gambar = asset('public/assets/images/product/' . $category->gambar);
+
+        $data  = [
+            $category,
+            $gambar,
+        ];
         return apiResponse(
-            400,
-            'error',
+            200,
+            'success',
             'Data Category',
-            Category::find($id)->first()
+            $data
         );
     }
 

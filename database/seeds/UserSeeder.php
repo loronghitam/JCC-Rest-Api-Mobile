@@ -18,7 +18,7 @@ class UserSeeder extends Seeder
         User::create([
             'name' => 'user',
             'email' => 'user@mail.com',
-            'password' => bcrypt('passwords'),
+            'password' => bcrypt('password'),
             'role' => 'collector',
         ])->assignRole('collector')->userDetail()->create([
             'tanggal_lahir' => $faker->date('Y-m-d', 'now'),
@@ -40,7 +40,7 @@ class UserSeeder extends Seeder
         User::create([
             'name' => 'user',
             'email' => 'user1@mail.com',
-            'password' => bcrypt('passwords'),
+            'password' => bcrypt('password'),
             'role' => 'seniman'
         ])->assignRole('seniman')->userDetail()->create([
             'tanggal_lahir' => $faker->date('Y-m-d H:i:s', 'now'),
@@ -64,7 +64,7 @@ class UserSeeder extends Seeder
             User::create([
                 'name' => $faker->name,
                 'email' => $faker->freeEmail,
-                'password' => bcrypt('passwords'),
+                'password' => bcrypt('password'),
                 'role' => $faker->randomElement((['seniman', 'collector']))
             ])->assignRole($faker->randomElement((['seniman', 'collector'])))->assignRole('seniman')->userDetail()->create([
                 'tanggal_lahir' => $faker->date('Y-m-d H:i:s', 'now'),

@@ -19,12 +19,30 @@ class ProductController extends Controller
      */
     public function index()
     {
+        $data = DB::table('products')
+            ->join('categories', 'products.category_id', '=', 'categories.id')
+            ->join('product_details', 'products.id', '=', 'product_details.product_id')
+            ->select(
+                'products.nama',
+                'tahun_pembuatan',
+                'deskripsi',
+                'dimensi',
+                'media',
+                'product_details.gambar as product_gambar',
+                'harga',
+                'status',
+                'status_barang',
+                'kondisi',
+                'categories.name as category',
+                'categories.gambar as category_gambar'
+            )
+            ->get();
         // dd(auth()->user()->role);
         return apiResponse(
             200,
             'success',
             'List Products / List Prodicts with category',
-            Product::with('category_id')->with('productDetails')->get()
+            $data
         );
     }
 
@@ -90,7 +108,7 @@ class ProductController extends Controller
             $extension = $request->file('gambar')->getClientOriginalExtension();
             $uniq = Str::orderedUuid();
             $name = $uniq . '.' . $extension;
-            $path = base_path('assets/images/product/');
+            $path = base_path('public/assets/images/product/');
             $request->file('gambar')->move($path, $name);
 
             $product = Product::create([

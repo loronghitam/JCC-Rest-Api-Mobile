@@ -17,7 +17,10 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 Route::group(['middleware' => 'guest'], function () {
     Route::post('/register', [AuthController::class, 'register']);
     Route::post('/login', [AuthController::class, 'login']);
-    Route::resource('product', ProductController::class)->only(['index', 'show']);
+    Route::prefix('p')->group(function () {
+        Route::resource('product', ProductController::class)->only(['index', 'show']);
+        Route::resource('category', CategoryController::class)->only(['index', 'show']);
+    });
 });
 
 /* -------------------------------------------------------------------------- */
@@ -50,7 +53,7 @@ Route::group(
         Route::resource('category', CategoryController::class);
         Route::resource('cart', CartController::class);
         Route::resource('chat', ChatController::class);
-        Route::resource('transcation', TransacationController::class);
+        // Route::resource('transcation', TransacationController::class);
     }
 );
 /* -------------------------------------------------------------------------- */
