@@ -27,7 +27,7 @@ class UserSeeder extends Seeder
             'status' => $faker->word(),
             'no_phone' => $faker->e164PhoneNumber,
             'aliran' => $faker->word(),
-            'gambar' => $faker->image(base_path('public/assets/images/user/'))
+            'gambar' => $faker->image(public_path('assets/images/user/'), 50, 50, null, false),
         ])->address()->create([
             'no_alamat' => $faker->randomNumber(5),
             'alamat' => $faker->cityPrefix,
