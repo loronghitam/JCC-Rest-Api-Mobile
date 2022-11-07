@@ -14,6 +14,7 @@ class UserSeeder extends Seeder
      */
     public function run()
     {
+        $fakers = Faker\Factory::create('id_ID');
         $faker = Faker\Factory::create();
         User::create([
             'name' => 'user',
@@ -27,7 +28,7 @@ class UserSeeder extends Seeder
             'status' => $faker->word(),
             'no_phone' => $faker->e164PhoneNumber,
             'aliran' => $faker->word(),
-            'gambar' => $faker->image(public_path('assets/images/user/'), 50, 50, null, false),
+            'gambar' => $faker->imageUrl(150, 150, 'people'),
         ])->address()->create([
             'no_alamat' => $faker->randomNumber(5),
             'alamat' => $faker->cityPrefix,
@@ -49,7 +50,7 @@ class UserSeeder extends Seeder
             'status' => $faker->word(),
             'no_phone' => $faker->e164PhoneNumber,
             'aliran' => $faker->word(),
-            'gambar' => $faker->image(base_path('public/assets/images/user/'), 500, 500, 'cats')
+            'gambar' => $faker->imageUrl(150, 150, 'people')
         ])->address()->create([
             'no_alamat' => $faker->randomNumber(5, true),
             'alamat' => $faker->cityPrefix,
@@ -62,8 +63,8 @@ class UserSeeder extends Seeder
 
         for ($i = 0; $i < 30; $i++) {
             User::create([
-                'name' => $faker->name,
-                'email' => $faker->freeEmail,
+                'name' => $fakers->name,
+                'email' => $fakers->freeEmail,
                 'password' => bcrypt('password'),
                 'role' => $faker->randomElement((['seniman', 'collector']))
             ])->assignRole($faker->randomElement((['seniman', 'collector'])))->assignRole('seniman')->userDetail()->create([
@@ -73,7 +74,7 @@ class UserSeeder extends Seeder
                 'status' => $faker->word(),
                 'no_phone' => $faker->e164PhoneNumber,
                 'aliran' => $faker->word(),
-                'gambar' => $faker->image(base_path('public/assets/images/user/'), 500, 500, 'cats', true)
+                'gambar' => $faker->imageUrl(150, 150, 'people')
             ])->address()->create([
                 'no_alamat' => $faker->randomNumber(5),
                 'alamat' => $faker->cityPrefix,

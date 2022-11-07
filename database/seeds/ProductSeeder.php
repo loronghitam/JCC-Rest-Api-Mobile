@@ -29,7 +29,8 @@ class ProductSeeder extends Seeder
                 'media' => $faker->randomElement((['canvas', 'carton'])),
                 'status_barang' => $faker->randomElement((['baru', 'jelek', 'bagus'])),
                 'kondisi' => $faker->randomElement((['baru kemari', 'tadi loh'])),
-                'gambar' => $faker->image('public/assets/images/category', 50, 50, 'cats', true),
+                'gambar' => $faker->imageUrl(224, 431, 'cats')
+
             ]);
         }
     }

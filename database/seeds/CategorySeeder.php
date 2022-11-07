@@ -14,11 +14,11 @@ class CategorySeeder extends Seeder
     public function run()
     {
         $faker = Factory::create();
-
+        $category = ['painting', 'sculpture', 'drawing', 'prints', 'installation', 'collage', 'mixed media', 'illustration', 'realism', 'faux naif', 'surrealisme', 'symbolism'];
         for ($i = 0; $i < 10; $i++) {
             Category::create([
-                'name' => $faker->word(),
-                'gambar' => $faker->imageUrl(620, 480),
+                'name' => $faker->unique()->randomElement($category),
+                'gambar' => $faker->imageUrl(499, 257, 'cats')
             ]);
         }
     }

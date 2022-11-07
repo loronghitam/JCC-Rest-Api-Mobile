@@ -21,7 +21,7 @@ class CategoryController extends Controller
             200,
             "success",
             "List Categories",
-            Category::all(['name as nama', 'gambar'])
+            Category::limit(5)->get(['name as nama', 'gambar'])
         );
     }
 
