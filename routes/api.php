@@ -37,10 +37,10 @@ Route::group(
         /*                                 ISCOLECTOR                                 */
         /* -------------------------------------------------------------------------- */
 
-        Route::group(['middleware' => ['role:colector']], function () {
+        Route::group(['middleware' => ['role:collector']], function () {
             Route::resource('product', ProductController::class)->only(['index', 'show']);
             Route::resource('category', CategoryController::class)->only(['index', 'show']);
-            Route::resource('transcation', TransactionController::class);
+            Route::resource('transcation', TransactionController::class)->only(['index', 'show', 'store']);
         });
 
         /* ----------------------------- END ISCOLECTOR ----------------------------- */

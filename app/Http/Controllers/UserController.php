@@ -19,13 +19,17 @@ class UserController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index($id)
+    public function index()
     {
-        $user =
-            User::where('id', $id)
-            ->first()->userDetail()->first();
-        UserDetail::where('user_id', $id)->first()
-            ->address()->first();
+        $id = auth()->user()->id;
+        $user = DB::table('users')
+            ->join('user_details as detail', 'users.id', '=', 'detail.user_id')
+            ->select('name', 'email', 'role', 'tanggal_lahir', 'tempat_lahir', 'biografi', 'status', 'no_phone', 'gambar')
+            ->first();
+        //     User::where('id', $id)
+        //     ->first()->userDetail()->first();
+        // UserDetail::where('user_id', $id)->first()
+        //     ->address()->first();
         $image = asset('assets/images/user/' . $user->gambar);
         $data = [
             $user,
@@ -35,10 +39,7 @@ class UserController extends Controller
             200,
             'success',
             'Data User',
-            [User::where('id', $id)
-                ->first()->userDetail()->first()],
-            [UserDetail::where('user_id', $id)->first()
-                ->address()->first()]
+            $data
 
         );
     }

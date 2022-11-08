@@ -1,6 +1,7 @@
 <?php
 
 use App\User;
+use App\UserDetail;
 use Illuminate\Database\Seeder;
 
 use function PHPSTORM_META\map;
@@ -14,8 +15,8 @@ class UserSeeder extends Seeder
      */
     public function run()
     {
+        // User::factory()->for(UserDetail::factory(5))->create();
         $fakers = Faker\Factory::create('id_ID');
-        $faker = Faker\Factory::create();
         User::create([
             'name' => 'user',
             'email' => 'user@mail.com',
@@ -30,7 +31,6 @@ class UserSeeder extends Seeder
             'aliran' => $fakers->word(),
             'gambar' => $fakers->imageUrl(150, 150, 'people'),
         ])->address()->create([
-            'no_alamat' => $fakers->randomNumber(5),
             'alamat' => $fakers->alamat,
             'provinsi' => $fakers->state,
             'kecamatan' => $fakers->citySuffix(),
@@ -52,7 +52,6 @@ class UserSeeder extends Seeder
             'aliran' => $fakers->word(),
             'gambar' => $fakers->imageUrl(150, 150, 'people')
         ])->address()->create([
-            'no_alamat' => $fakers->randomNumber(5, true),
             'alamat' => $fakers->alamat,
             'provinsi' => $fakers->state,
             'kecamatan' => $fakers->citySuffix(),
@@ -76,7 +75,6 @@ class UserSeeder extends Seeder
                 'aliran' => $fakers->word(),
                 'gambar' => $fakers->imageUrl(150, 150, 'people')
             ])->address()->create([
-                'no_alamat' => $fakers->randomNumber(5),
                 'alamat' => $fakers->alamat,
                 'provinsi' => $fakers->state,
                 'kecamatan' => $fakers->stateAbbr(),

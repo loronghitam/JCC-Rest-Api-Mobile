@@ -15,14 +15,16 @@ class CreateTransactionDetailsTable extends Migration
     {
         Schema::create('transaction_details', function (Blueprint $table) {
             $table->id();
-            $table->string('no_resi');
-            $table->integer('total');
+            $table->string('no_resi')->nullable();
+            $table->integer('total')->nullable();
             $table->string('kurir');
             $table->string('pembayaran'); //methode yang digunakn untuk pembayaran
-            $table->string('status');
-            $table->string('status_paket');
-            $table->date('batay_pembayaran');
-            $table->foreignId('transaction_id')->constrained();
+            $table->string('status')->default('pending');
+            $table->string('status_paket')->default('dikemas');
+            $table->date('batas_pembayaran');
+            // $table->foreignId('transaction_id')->constrained();
+            $table->foreignId('user_id')->constrained();
+            $table->foreignId('address_id')->constrained();
             $table->timestamps();
         });
     }

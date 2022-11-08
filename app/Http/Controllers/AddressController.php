@@ -20,7 +20,7 @@ class AddressController extends Controller
     public function index()
     {
         // dd('asik');
-        DB::enableQueryLog();
+        // DB::enableQueryLog();
         return apiResponse(
             200,
             'success',

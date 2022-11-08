@@ -1,5 +1,6 @@
 <?php
 
+use App\User;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Artisan;
 
@@ -20,6 +21,14 @@ class DatabaseSeeder extends Seeder
                 ProductSeeder::class,
             ],
         );
+
+        // $this->call(
+        //     [
+        //         UserSeeder::class
+        //     ]
+        // );
+        // User::factory(5)->create('id_ID');
+
         Artisan::call('passport:install');
     }
 }
