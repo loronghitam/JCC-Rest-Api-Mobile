@@ -17,11 +17,13 @@ class CategoryController extends Controller
      */
     public function index()
     {
+        $data =  Category::limit(5)->get(['name as nama', 'gambar']);
+
         return apiResponse(
             200,
             "success",
             "List Categories",
-            Category::limit(5)->get(['name as nama', 'gambar'])
+            $data
         );
     }
 
@@ -78,7 +80,7 @@ class CategoryController extends Controller
                 'gambar' => $name,
             ]);
 
-            $gambar = asset('assets/images/category/' . $category->gambar);
+            $gambar = asset('images/category/' . $category->gambar);
             $data = [
                 $category,
                 $gambar,
@@ -104,8 +106,8 @@ class CategoryController extends Controller
      */
     public function show($id)
     {
-        $category = Category::find($id)->first(['name as nama', 'gambar']);
-        $gambar = asset('public/assets/images/product/' . $category->gambar);
+        $category = Category::findOrFail($id)->first(['name as nama', 'gambar']);
+        $gambar = asset('assets/images/product/' . $category->gambar);
 
         $data  = [
             $category,

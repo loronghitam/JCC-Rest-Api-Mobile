@@ -19,24 +19,59 @@ class ProductController extends Controller
      */
     public function index()
     {
-        $data = DB::table('products')
-            ->join('categories', 'products.category_id', '=', 'categories.id')
-            ->join('product_details', 'products.id', '=', 'product_details.product_id')
-            ->select(
-                'products.nama',
-                'tahun_pembuatan',
-                'deskripsi',
-                'dimensi',
-                'media',
-                'product_details.gambar as product_gambar',
-                'harga',
-                'status',
-                'status_barang',
-                'kondisi',
-                'categories.name as category',
-                'categories.gambar as category_gambar'
-            )
-            ->get();
+        if (request()->search == null) {
+            $data = DB::table('products')
+                ->join('categories', 'products.category_id', '=', 'categories.id')
+                ->join('product_details', 'products.id', '=', 'product_details.product_id')
+                ->select(
+                    'products.nama',
+                    'tahun_pembuatan',
+                    'deskripsi',
+                    'dimensi',
+                    'media',
+                    'product_details.gambar as product_gambar',
+                    'harga',
+                    'status',
+                    'status_barang',
+                    'kondisi',
+                    'categories.name as category',
+                    'categories.gambar as category_gambar'
+                )
+                ->limit(5)
+                ->get();
+        } else {
+            $data = DB::table('products')
+                ->join('categories', 'products.category_id', '=', 'categories.id')
+                ->join('product_details', 'products.id', '=', 'product_details.product_id')
+                ->join('users', 'products.user_id', '=', 'users.id')
+                ->where(
+                    'categories.name',
+                    'like',
+                    '%' . request()->search . '%',
+                )
+                ->orWhere(
+                    'users.name',
+                    'like',
+                    '%' . request()->search . '%',
+                )
+                ->select(
+                    'users.name as pembuat',
+                    'products.nama as nama_lukisan',
+                    'tahun_pembuatan',
+                    'deskripsi',
+                    'dimensi',
+                    'media',
+                    'product_details.gambar as product_gambar',
+                    'harga',
+                    'status',
+                    'status_barang',
+                    'kondisi',
+                    'categories.name as category',
+                    'categories.gambar as category_gambar'
+                )
+                ->limit(5)
+                ->get();
+        }
         // dd(auth()->user()->role);
         return apiResponse(
             200,
@@ -134,7 +169,7 @@ class ProductController extends Controller
                 ]
             );
 
-            $gambar = asset('public/assets/images/product/' . $name);
+            $gambar = asset('assets/images/product/' . $name);
 
             $data  = [
                 $product,

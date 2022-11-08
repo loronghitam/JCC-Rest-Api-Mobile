@@ -22,21 +22,21 @@ class UserSeeder extends Seeder
             'password' => bcrypt('password'),
             'role' => 'collector',
         ])->assignRole('collector')->userDetail()->create([
-            'tanggal_lahir' => $faker->date('Y-m-d', 'now'),
-            'tempat_lahir' => $faker->city(),
-            'biografi' => $faker->text(40),
-            'status' => $faker->word(),
-            'no_phone' => $faker->e164PhoneNumber,
-            'aliran' => $faker->word(),
-            'gambar' => $faker->imageUrl(150, 150, 'people'),
+            'tanggal_lahir' => $fakers->date('Y-m-d', 'now'),
+            'tempat_lahir' => $fakers->city(),
+            'biografi' => $fakers->text(40),
+            'status' => $fakers->word(),
+            'no_phone' => $fakers->PhoneNumber,
+            'aliran' => $fakers->word(),
+            'gambar' => $fakers->imageUrl(150, 150, 'people'),
         ])->address()->create([
-            'no_alamat' => $faker->randomNumber(5),
-            'alamat' => $faker->cityPrefix,
-            'provinsi' => $faker->state,
-            'kecamatan' => $faker->citySuffix(),
-            'kota' => $faker->city(),
-            'desa' => $faker->streetName(),
-            'prioritas' => $faker->randomNumber('1',),
+            'no_alamat' => $fakers->randomNumber(5),
+            'alamat' => $fakers->alamat,
+            'provinsi' => $fakers->state,
+            'kecamatan' => $fakers->citySuffix(),
+            'kota' => $fakers->city(),
+            'desa' => $fakers->streetName(),
+            'prioritas' => $fakers->randomNumber('1',),
         ]);
         User::create([
             'name' => 'user',
@@ -44,21 +44,21 @@ class UserSeeder extends Seeder
             'password' => bcrypt('password'),
             'role' => 'seniman'
         ])->assignRole('seniman')->userDetail()->create([
-            'tanggal_lahir' => $faker->date('Y-m-d H:i:s', 'now'),
-            'tempat_lahir' => $faker->city(),
-            'biografi' => $faker->text(40),
-            'status' => $faker->word(),
-            'no_phone' => $faker->e164PhoneNumber,
-            'aliran' => $faker->word(),
-            'gambar' => $faker->imageUrl(150, 150, 'people')
+            'tanggal_lahir' => $fakers->date('Y-m-d H:i:s', 'now'),
+            'tempat_lahir' => $fakers->city(),
+            'biografi' => $fakers->text(40),
+            'status' => $fakers->word(),
+            'no_phone' => $fakers->PhoneNumber,
+            'aliran' => $fakers->word(),
+            'gambar' => $fakers->imageUrl(150, 150, 'people')
         ])->address()->create([
-            'no_alamat' => $faker->randomNumber(5, true),
-            'alamat' => $faker->cityPrefix,
-            'provinsi' => $faker->state,
-            'kecamatan' => $faker->citySuffix(),
-            'kota' => $faker->city(),
-            'desa' => $faker->streetName(),
-            'prioritas' => $faker->randomNumber(1),
+            'no_alamat' => $fakers->randomNumber(5, true),
+            'alamat' => $fakers->alamat,
+            'provinsi' => $fakers->state,
+            'kecamatan' => $fakers->citySuffix(),
+            'kota' => $fakers->city(),
+            'desa' => $fakers->streetName(),
+            'prioritas' => $fakers->randomNumber(1),
         ]);
 
         for ($i = 0; $i < 30; $i++) {
@@ -66,23 +66,23 @@ class UserSeeder extends Seeder
                 'name' => $fakers->name,
                 'email' => $fakers->freeEmail,
                 'password' => bcrypt('password'),
-                'role' => $faker->randomElement((['seniman', 'collector']))
-            ])->assignRole($faker->randomElement((['seniman', 'collector'])))->assignRole('seniman')->userDetail()->create([
-                'tanggal_lahir' => $faker->date('Y-m-d H:i:s', 'now'),
-                'tempat_lahir' => $faker->city(),
-                'biografi' => $faker->text(40),
-                'status' => $faker->word(),
-                'no_phone' => $faker->e164PhoneNumber,
-                'aliran' => $faker->word(),
-                'gambar' => $faker->imageUrl(150, 150, 'people')
+                'role' => $fakers->randomElement((['seniman', 'collector']))
+            ])->assignRole($fakers->randomElement((['seniman', 'collector'])))->assignRole('seniman')->userDetail()->create([
+                'tanggal_lahir' => $fakers->date('Y-m-d H:i:s', 'now'),
+                'tempat_lahir' => $fakers->city(),
+                'biografi' => $fakers->text(40),
+                'status' => $fakers->word(),
+                'no_phone' => $fakers->phoneNumber(),
+                'aliran' => $fakers->word(),
+                'gambar' => $fakers->imageUrl(150, 150, 'people')
             ])->address()->create([
-                'no_alamat' => $faker->randomNumber(5),
-                'alamat' => $faker->cityPrefix,
-                'provinsi' => $faker->state,
-                'kecamatan' => $faker->citySuffix(),
-                'kota' => $faker->city(),
-                'desa' => $faker->streetName(),
-                'prioritas' => $faker->randomNumber(1),
+                'no_alamat' => $fakers->randomNumber(5),
+                'alamat' => $fakers->alamat,
+                'provinsi' => $fakers->state,
+                'kecamatan' => $fakers->stateAbbr(),
+                'kota' => $fakers->city(),
+                'desa' => $fakers->streetName(),
+                'prioritas' => $fakers->randomNumber(1),
             ]);
         }
     }

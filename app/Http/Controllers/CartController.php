@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Cart;
 use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class CartController extends Controller
 {
@@ -15,11 +17,40 @@ class CartController extends Controller
      */
     public function index()
     {
+        $data = DB::table('carts')
+            ->where(
+                'condition',
+                '=',
+                '0',
+            )
+            ->where(
+                'carts.user_id',
+                '=',
+                auth()->user()->id
+            )
+            ->join('users', 'carts.user_id', '=', 'users.id')
+            ->join('products', 'carts.product_id', '=', 'products.id')
+            ->join('product_details as detail', 'products.id', '=', 'detail.product_id')
+            ->join('users as pelukis', 'products.user_id', '=', 'pelukis.id')
+            ->join('user_details as pelukisD', 'users.id', '=', 'pelukisD.user_id')
+            // ->join('categories', 'products.category_id', '=', 'categories.id')
+            ->select(
+                'products.nama as nama_product',
+                'tahun_pembuatan',
+                'pelukis.name as nama_pelukis',
+                // 'categories.name as category'
+                'detail.harga',
+                'pelukisD.gambar as gambar_pelukis',
+                'pelukisD.aliran as aliran_pelukis'
+            )
+            ->orderBy('carts.created_at', 'desc')
+            ->get();
         return apiResponse(
             200,
             'Success',
             'Daftar Cart',
-            Cart::where('user_id', auth()->user()->id,)->where('condition', 0)->with('product_id.category_id')->get()
+            // Cart::where('user_id', auth()->user()->id,)->where('condition', 0)->with('product_id.category_id')->get()
+            $data
         );
     }
 
@@ -41,19 +72,29 @@ class CartController extends Controller
      */
     public function store(Request $request)
     {
-        try {
-            $data = Cart::create([
-                'product_id' => $request->product_id,
-                'user_id' => auth()->user()->id,
-            ]);
+        if (Cart::where('product_id', $request->product_id)->where('user_id', auth()->user()->id)->first()) {
             return apiResponse(
-                200,
-                'success',
-                'Data Berhasil Ditambah',
-                $data
+                400,
+                'error',
+                'Product Sudah Terdaftar',
+                DB::table('carts')->join('products', 'carts.product_id', '=', 'products.id')
+                    ->select('carts.*', 'products.*')->first()
             );
-        } catch (Exception $e) {
-            dd($e);
+        } else {
+            try {
+                $data = Cart::create([
+                    'product_id' => $request->product_id,
+                    'user_id' => auth()->user()->id,
+                ]);
+                return apiResponse(
+                    200,
+                    'success',
+                    'Data Berhasil Ditambah',
+                    $data
+                );
+            } catch (Exception $e) {
+                dd($e);
+            }
         }
     }
 

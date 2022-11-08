@@ -79,9 +79,7 @@ return [
     */
 
     'links' => [
-        public_path('category') => storage_path('app/public/asset/images/category'),
-        public_path('user') => storage_path('app/public/asset/images/user'),
-        public_path('product') => storage_path('app/public/asset/images/product'),
+        public_path('storage') => storage_path('app/public/asset/images'),
     ],
 
 ];

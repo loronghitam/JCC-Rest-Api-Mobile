@@ -27,7 +27,7 @@ class AddressController extends Controller
             'Data User',
             DB::table('users')
                 ->join('addresses', 'users.id', '=', 'addresses.user_id')
-                ->select('name', 'email', 'role', 'no_alamat as urutan alamat', 'alamat', 'provinsi', 'kota', 'desa', 'desa')
+                ->select('name', 'email', 'role', 'no_alamat as urutan alamat', 'alamat', 'provinsi', 'kota', 'kecamatan', 'desa')
                 ->get()
         );
     }

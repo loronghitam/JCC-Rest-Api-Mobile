@@ -88,6 +88,7 @@ class UserController extends Controller
                 'alamat',
                 'provinsi',
                 'kota',
+                'kecamatan',
                 'desa',
             )
             ->first();

@@ -1,10 +1,11 @@
 <?php
 
+use App\Category;
+use GuzzleHttp\Middleware;
 use Illuminate\Http\Request;
+use Illuminate\Routing\RouteGroup;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
-use GuzzleHttp\Middleware;
-use Illuminate\Routing\RouteGroup;
 
 
 Route::middleware('auth:api')->get('/user', function (Request $request) {
@@ -36,8 +37,10 @@ Route::group(
         /*                                 ISCOLECTOR                                 */
         /* -------------------------------------------------------------------------- */
 
-        Route::group(['middleware' => ['role:seniman']], function () {
-            Route::resource('product', ProductController::class)->except(['create']);
+        Route::group(['middleware' => ['role:colector']], function () {
+            Route::resource('product', ProductController::class)->only(['index', 'show']);
+            Route::resource('category', CategoryController::class)->only(['index', 'show']);
+            Route::resource('transcation', TransactionController::class);
         });
 
         /* ----------------------------- END ISCOLECTOR ----------------------------- */
@@ -45,7 +48,9 @@ Route::group(
         /* -------------------------------------------------------------------------- */
         /*                                  ISSENIMAN                                 */
         /* -------------------------------------------------------------------------- */
-
+        Route::group(['middleware' => ['role:seniman']], function () {
+            Route::resource('product', ProductController::class)->only(['create', 'edit', 'update', 'delete']);
+        });
 
         /* ------------------------------ END ISSENIMAN ----------------------------- */
         Route::resource('user', UserController::class);
@@ -53,7 +58,6 @@ Route::group(
         Route::resource('category', CategoryController::class);
         Route::resource('cart', CartController::class);
         Route::resource('chat', ChatController::class);
-        // Route::resource('transcation', TransacationController::class);
     }
 );
 /* -------------------------------------------------------------------------- */
